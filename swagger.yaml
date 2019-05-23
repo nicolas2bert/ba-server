@@ -1,0 +1,110 @@
+swagger: "2.0"
+info:
+  title: BA API
+  description: photo API
+  version: 0.0.1
+
+basePath: /api/v1
+schemes:
+  - http
+
+consumes:
+  - application/json
+produces:
+  - application/json
+
+securityDefinitions:
+  ui-api:
+    type: apiKey
+    in: header
+    name: x-ui-ba-token
+  intern-api:
+    type: apiKey
+    in: header
+    name: x-intern-ba-token
+
+paths:
+  /users/{id}:
+    get:
+      summary: Get user from internal ba webserver
+      tags:
+        - intern
+      security:
+        - intern-api: []
+      operationId: getUsersId
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: flickr user id
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+  /users:
+    post:
+      summary: Create user from internal ba webserver
+      tags:
+        - intern
+      security:
+        - intern-api: []
+      operationId: saveUser
+      parameters:
+        - in: body
+          name: user
+          description: user to create.
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        200:
+          description: OK
+  /photos/{id}:
+    get:
+      summary: Returns list of photos
+      tags:
+        - ui
+      security:
+        - ui-api: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: for now, flickr user id
+      operationId: getPhotos
+      responses:
+        200:
+          description: list of photo urls
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                url:
+                  type: string
+                description:
+                  type: string
+        400:
+          description: bad request
+        404:
+          description: server error
+        default:
+          description: Unexpected error
+definitions:
+  User:
+    type: object
+    required:
+      - id
+      - flickrToken
+      - flickrSecretToken
+    properties:
+      id:
+        type: string
+      flickrToken:
+        type: string
+      flickrSecretToken:
+        type: string
