@@ -9,12 +9,14 @@ import (
 
 	errors "github.com/go-openapi/errors"
 	runtime "github.com/go-openapi/runtime"
+	log "github.com/sirupsen/logrus"
 
 	jwt "github.com/dgrijalva/jwt-go"
 
 	"github.com/rs/cors"
 
 	"github.com/nicolas2bert/ba-server/apiv1/auth"
+	apiContext "github.com/nicolas2bert/ba-server/apiv1/restapi/context"
 	"github.com/nicolas2bert/ba-server/apiv1/restapi/intern/users"
 	"github.com/nicolas2bert/ba-server/apiv1/restapi/ui/photos"
 	"github.com/nicolas2bert/ba-server/gen/restapi/operations"
@@ -132,7 +134,7 @@ func setupMiddlewares(handler http.Handler) http.Handler {
 	return handler
 }
 
-func WithCors(handler http.Handler) http.Handler {
+func withCors(handler http.Handler) http.Handler {
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{
 			"http://127.0.0.1:3003",
@@ -156,8 +158,25 @@ func WithCors(handler http.Handler) http.Handler {
 	return c.Handler(handler)
 }
 
+type logkey string
+
+func withLogging(handler http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		l := log.WithFields(log.Fields{
+			"component": "ba-server",
+			"method":    r.Method,
+			"url":       r.URL,
+			"host":      r.Host,
+		})
+		ctx := apiContext.AddLog(l, r.Context())
+		r = r.WithContext(ctx)
+
+		handler.ServeHTTP(w, r)
+	})
+}
+
 // The middleware configuration happens before anything, this middleware also applies to serving the swagger.json document.
 // So this is a good place to plug in a panic handling middleware, logging and metrics
 func setupGlobalMiddleware(handler http.Handler) http.Handler {
-	return WithCors(handler)
+	return withCors(withLogging(handler))
 }

@@ -35,8 +35,6 @@ func getSigningBaseString(basicURL string) string {
 }
 
 func (c *Client) getOauthSignedURL(basicURL string) string {
-	fmt.Printf("\n c.ConsumerKey!!!: %v \n", c.ConsumerKey)
-	fmt.Printf("\n c.ConsumerSecret!!!: %v \n", c.ConsumerSecret)
 	timestamp := fmt.Sprintf("%d", time.Now().Unix())
 	oAuthURL := basicURL + "&nojsoncallback=1" +
 		"&oauth_nonce=12345678" +
@@ -72,18 +70,14 @@ func (c *Client) Request(method string, args map[string]string) ([]byte, error) 
 
 	signedURL := c.getOauthSignedURL(basicURL)
 
-	fmt.Printf("\n signedURL!!!: %v \n", signedURL)
-
 	res, err := http.Get(signedURL)
 	if err != nil {
-		fmt.Printf("\n GET err!!!: %v \n", err)
 		return nil, fmt.Errorf("GET")
 	}
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		fmt.Printf("\n read err!!!: %v \n", err)
 		return nil, fmt.Errorf("read")
 	}
 

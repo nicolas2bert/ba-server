@@ -73,27 +73,24 @@ func (o *GetPhotos) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 }
 
-// GetPhotosOKBodyItems0 get photos o k body items0
-// swagger:model GetPhotosOKBodyItems0
-type GetPhotosOKBodyItems0 struct {
+// GetPhotosBadRequestBody get photos bad request body
+// swagger:model GetPhotosBadRequestBody
+type GetPhotosBadRequestBody struct {
 
-	// description
-	Description string `json:"description,omitempty"`
+	// code
+	Code int64 `json:"code,omitempty"`
 
-	// id
-	ID string `json:"id,omitempty"`
-
-	// url
-	URL string `json:"url,omitempty"`
+	// message
+	Message string `json:"message,omitempty"`
 }
 
-// Validate validates this get photos o k body items0
-func (o *GetPhotosOKBodyItems0) Validate(formats strfmt.Registry) error {
+// Validate validates this get photos bad request body
+func (o *GetPhotosBadRequestBody) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (o *GetPhotosOKBodyItems0) MarshalBinary() ([]byte, error) {
+func (o *GetPhotosBadRequestBody) MarshalBinary() ([]byte, error) {
 	if o == nil {
 		return nil, nil
 	}
@@ -101,8 +98,8 @@ func (o *GetPhotosOKBodyItems0) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (o *GetPhotosOKBodyItems0) UnmarshalBinary(b []byte) error {
-	var res GetPhotosOKBodyItems0
+func (o *GetPhotosBadRequestBody) UnmarshalBinary(b []byte) error {
+	var res GetPhotosBadRequestBody
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

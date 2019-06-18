@@ -58,33 +58,19 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "list of photo urls",
+            "description": "list of photos",
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "description": {
-                    "type": "string"
-                  },
-                  "id": {
-                    "type": "string"
-                  },
-                  "url": {
-                    "type": "string"
-                  }
-                }
-              }
+              "$ref": "#/definitions/Photos"
             }
           },
           "400": {
-            "description": "bad request"
+            "$ref": "#/responses/BadRequest"
           },
           "404": {
-            "description": "server error"
+            "$ref": "#/responses/NotFound"
           },
-          "default": {
-            "description": "Unexpected error"
+          "500": {
+            "$ref": "#/responses/ServerError"
           }
         }
       }
@@ -151,6 +137,23 @@ func init() {
     }
   },
   "definitions": {
+    "Photos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "User": {
       "type": "object",
       "required": [
@@ -169,6 +172,29 @@ func init() {
           "type": "string"
         }
       }
+    }
+  },
+  "responses": {
+    "BadRequest": {
+      "description": "Bad request",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "NotFound": {
+      "description": "Not Found"
+    },
+    "ServerError": {
+      "description": "Server Error"
     }
   },
   "securityDefinitions": {
@@ -225,33 +251,31 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "list of photo urls",
+            "description": "list of photos",
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "description": {
-                    "type": "string"
-                  },
-                  "id": {
-                    "type": "string"
-                  },
-                  "url": {
-                    "type": "string"
-                  }
+              "$ref": "#/definitions/Photos"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "message": {
+                  "type": "string"
                 }
               }
             }
           },
-          "400": {
-            "description": "bad request"
-          },
           "404": {
-            "description": "server error"
+            "description": "Not Found"
           },
-          "default": {
-            "description": "Unexpected error"
+          "500": {
+            "description": "Server Error"
           }
         }
       }
@@ -318,6 +342,23 @@ func init() {
     }
   },
   "definitions": {
+    "Photos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "User": {
       "type": "object",
       "required": [
@@ -336,6 +377,29 @@ func init() {
           "type": "string"
         }
       }
+    }
+  },
+  "responses": {
+    "BadRequest": {
+      "description": "Bad request",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "NotFound": {
+      "description": "Not Found"
+    },
+    "ServerError": {
+      "description": "Server Error"
     }
   },
   "securityDefinitions": {

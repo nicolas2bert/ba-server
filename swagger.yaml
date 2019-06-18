@@ -76,24 +76,15 @@ paths:
       operationId: getPhotos
       responses:
         200:
-          description: list of photo urls
+          description: list of photos
           schema:
-            type: array
-            items:
-              type: object
-              properties:
-                id:
-                  type: string
-                url:
-                  type: string
-                description:
-                  type: string
+            $ref: '#/definitions/Photos'
         400:
-          description: bad request
+          $ref: '#/responses/BadRequest'
         404:
-          description: server error
-        default:
-          description: Unexpected error
+          $ref: '#/responses/NotFound'
+        500:
+          $ref: '#/responses/ServerError'
 definitions:
   User:
     type: object
@@ -108,3 +99,29 @@ definitions:
         type: string
       flickrSecretToken:
         type: string
+  Photos:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+        description:
+          type: string
+responses:
+    BadRequest:
+      description: Bad request
+      schema:
+        type: object
+        properties:
+          code:
+            type: integer
+            format: int64
+          message:
+            type: string
+    NotFound:
+      description: Not Found
+    ServerError:
+      description: Server Error

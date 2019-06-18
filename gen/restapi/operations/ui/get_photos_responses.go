@@ -9,12 +9,14 @@ import (
 	"net/http"
 
 	"github.com/go-openapi/runtime"
+
+	models "github.com/nicolas2bert/ba-server/gen/models"
 )
 
 // GetPhotosOKCode is the HTTP code returned for type GetPhotosOK
 const GetPhotosOKCode int = 200
 
-/*GetPhotosOK list of photo urls
+/*GetPhotosOK list of photos
 
 swagger:response getPhotosOK
 */
@@ -23,7 +25,7 @@ type GetPhotosOK struct {
 	/*
 	  In: Body
 	*/
-	Payload []*GetPhotosOKBodyItems0 `json:"body,omitempty"`
+	Payload models.Photos `json:"body,omitempty"`
 }
 
 // NewGetPhotosOK creates GetPhotosOK with default headers values
@@ -33,13 +35,13 @@ func NewGetPhotosOK() *GetPhotosOK {
 }
 
 // WithPayload adds the payload to the get photos o k response
-func (o *GetPhotosOK) WithPayload(payload []*GetPhotosOKBodyItems0) *GetPhotosOK {
+func (o *GetPhotosOK) WithPayload(payload models.Photos) *GetPhotosOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get photos o k response
-func (o *GetPhotosOK) SetPayload(payload []*GetPhotosOKBodyItems0) {
+func (o *GetPhotosOK) SetPayload(payload models.Photos) {
 	o.Payload = payload
 }
 
@@ -49,7 +51,7 @@ func (o *GetPhotosOK) WriteResponse(rw http.ResponseWriter, producer runtime.Pro
 	rw.WriteHeader(200)
 	payload := o.Payload
 	if payload == nil {
-		payload = make([]*GetPhotosOKBodyItems0, 0, 50)
+		payload = make(models.Photos, 0, 50)
 	}
 
 	if err := producer.Produce(rw, payload); err != nil {
@@ -61,11 +63,16 @@ func (o *GetPhotosOK) WriteResponse(rw http.ResponseWriter, producer runtime.Pro
 // GetPhotosBadRequestCode is the HTTP code returned for type GetPhotosBadRequest
 const GetPhotosBadRequestCode int = 400
 
-/*GetPhotosBadRequest bad request
+/*GetPhotosBadRequest Bad request
 
 swagger:response getPhotosBadRequest
 */
 type GetPhotosBadRequest struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *GetPhotosBadRequestBody `json:"body,omitempty"`
 }
 
 // NewGetPhotosBadRequest creates GetPhotosBadRequest with default headers values
@@ -74,18 +81,33 @@ func NewGetPhotosBadRequest() *GetPhotosBadRequest {
 	return &GetPhotosBadRequest{}
 }
 
+// WithPayload adds the payload to the get photos bad request response
+func (o *GetPhotosBadRequest) WithPayload(payload *GetPhotosBadRequestBody) *GetPhotosBadRequest {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the get photos bad request response
+func (o *GetPhotosBadRequest) SetPayload(payload *GetPhotosBadRequestBody) {
+	o.Payload = payload
+}
+
 // WriteResponse to the client
 func (o *GetPhotosBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
 	rw.WriteHeader(400)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
 }
 
 // GetPhotosNotFoundCode is the HTTP code returned for type GetPhotosNotFound
 const GetPhotosNotFoundCode int = 404
 
-/*GetPhotosNotFound server error
+/*GetPhotosNotFound Not Found
 
 swagger:response getPhotosNotFound
 */
@@ -106,40 +128,26 @@ func (o *GetPhotosNotFound) WriteResponse(rw http.ResponseWriter, producer runti
 	rw.WriteHeader(404)
 }
 
-/*GetPhotosDefault Unexpected error
+// GetPhotosInternalServerErrorCode is the HTTP code returned for type GetPhotosInternalServerError
+const GetPhotosInternalServerErrorCode int = 500
 
-swagger:response getPhotosDefault
+/*GetPhotosInternalServerError Server Error
+
+swagger:response getPhotosInternalServerError
 */
-type GetPhotosDefault struct {
-	_statusCode int
+type GetPhotosInternalServerError struct {
 }
 
-// NewGetPhotosDefault creates GetPhotosDefault with default headers values
-func NewGetPhotosDefault(code int) *GetPhotosDefault {
-	if code <= 0 {
-		code = 500
-	}
+// NewGetPhotosInternalServerError creates GetPhotosInternalServerError with default headers values
+func NewGetPhotosInternalServerError() *GetPhotosInternalServerError {
 
-	return &GetPhotosDefault{
-		_statusCode: code,
-	}
-}
-
-// WithStatusCode adds the status to the get photos default response
-func (o *GetPhotosDefault) WithStatusCode(code int) *GetPhotosDefault {
-	o._statusCode = code
-	return o
-}
-
-// SetStatusCode sets the status to the get photos default response
-func (o *GetPhotosDefault) SetStatusCode(code int) {
-	o._statusCode = code
+	return &GetPhotosInternalServerError{}
 }
 
 // WriteResponse to the client
-func (o *GetPhotosDefault) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+func (o *GetPhotosInternalServerError) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
 
-	rw.WriteHeader(o._statusCode)
+	rw.WriteHeader(500)
 }
