@@ -148,6 +148,9 @@ func init() {
           "id": {
             "type": "string"
           },
+          "title": {
+            "type": "string"
+          },
           "url": {
             "type": "string"
           }
@@ -351,6 +354,9 @@ func init() {
             "type": "string"
           },
           "id": {
+            "type": "string"
+          },
+          "title": {
             "type": "string"
           },
           "url": {

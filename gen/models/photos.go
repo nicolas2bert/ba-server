@@ -54,6 +54,9 @@ type PhotosItems0 struct {
 	// id
 	ID string `json:"id,omitempty"`
 
+	// title
+	Title string `json:"title,omitempty"`
+
 	// url
 	URL string `json:"url,omitempty"`
 }

@@ -2,6 +2,7 @@ package photos
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"strconv"
 	"sync"
@@ -15,7 +16,20 @@ import (
 type photoScheme struct {
 	ID          string
 	Secret      string
-	Title       string
+	Farm        int
+	Server      string
+	Description struct {
+		Content string `json:"_content"`
+	}
+	Dates struct{ Posted int64 }
+}
+
+type photoWithTitleScheme struct {
+	ID     string
+	Secret string
+	Title  struct {
+		Content string `json:"_content"`
+	}
 	Farm        int
 	Server      string
 	Description struct {
@@ -31,7 +45,7 @@ type photosScheme struct {
 
 type photosInfoScheme struct {
 	Stat  string
-	Photo photoScheme
+	Photo photoWithTitleScheme
 }
 
 var flickr_consumer_secret = os.Getenv("FLICKR_SECRET")
@@ -55,12 +69,15 @@ func getFlickrInfoPhoto(id string, user models.User, wg *sync.WaitGroup) *models
 	if err != nil {
 		return nil
 	}
+	fmt.Printf("\n bodyInfo!!!: %v \n", string(bodyInfo))
 	var info photosInfoScheme
 	json.Unmarshal(bodyInfo, &info)
+	fmt.Printf("\n info.Photo.Title.Content!!! %v \n", info.Photo.Title.Content)
 	item := models.PhotosItems0{
 		ID:          id,
+		Title:       info.Photo.Title.Content,
 		Description: info.Photo.Description.Content,
-		URL:         "https://farm" + strconv.Itoa(info.Photo.Farm) + ".staticflickr.com/" + info.Photo.Server + "/" + info.Photo.ID + "_" + info.Photo.Secret + ".jpg",
+		URL:         "https://farm" + strconv.Itoa(info.Photo.Farm) + ".staticflickr.com/" + info.Photo.Server + "/" + info.Photo.ID + "_" + info.Photo.Secret + "_c.jpg",
 	}
 	return &item
 }
@@ -71,7 +88,8 @@ func getFlickrPhotos(user models.User) ([]photoScheme, middleware.Responder) {
 	fc.SecretToken = *user.FlickrSecretToken
 
 	args := map[string]string{
-		"user_id": *user.ID,
+		// "user_id": *user.ID,
+		"user_id": "147032531@N08",
 	}
 	body, err := fc.Request("flickr.people.getPhotos", args)
 	if err != nil {
