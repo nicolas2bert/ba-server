@@ -2,7 +2,6 @@ package photos
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"strconv"
 	"sync"
@@ -69,10 +68,8 @@ func getFlickrInfoPhoto(id string, user models.User, wg *sync.WaitGroup) *models
 	if err != nil {
 		return nil
 	}
-	fmt.Printf("\n bodyInfo!!!: %v \n", string(bodyInfo))
 	var info photosInfoScheme
 	json.Unmarshal(bodyInfo, &info)
-	fmt.Printf("\n info.Photo.Title.Content!!! %v \n", info.Photo.Title.Content)
 	item := models.PhotosItems0{
 		ID:          id,
 		Title:       info.Photo.Title.Content,

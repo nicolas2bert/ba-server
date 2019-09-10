@@ -43,6 +43,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/User'
+        400:
+          $ref: '#/responses/BadRequest'
+        404:
+          $ref: '#/responses/NotFound'
+        500:
+          $ref: '#/responses/ServerError'
   /users:
     post:
       summary: Create user from internal ba webserver
@@ -60,6 +66,12 @@ paths:
       responses:
         200:
           description: OK
+        400:
+          $ref: '#/responses/BadRequest'
+        404:
+          $ref: '#/responses/NotFound'
+        500:
+          $ref: '#/responses/ServerError'
   /photos/{id}:
     get:
       summary: Returns list of photos

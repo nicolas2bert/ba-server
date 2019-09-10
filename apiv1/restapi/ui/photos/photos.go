@@ -29,7 +29,7 @@ func GetPhotosHandler(params ui.GetPhotosParams, principal *auth.PrincipalBA) mi
 	ctx := params.HTTPRequest.Context()
 	l := apiContext.GetLog(ctx, "GetPhotosHandler")
 
-	u, err := users.GetUserID(userID)
+	u, err := users.GetUserID(ctx, userID)
 	if err != nil {
 		l.Error("get user")
 		return err

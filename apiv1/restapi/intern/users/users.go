@@ -1,28 +1,32 @@
 package users
 
 import (
+	"context"
+
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/nicolas2bert/ba-server/apiv1/auth"
 	apiContext "github.com/nicolas2bert/ba-server/apiv1/restapi/context"
+	"github.com/nicolas2bert/ba-server/db"
 	"github.com/nicolas2bert/ba-server/gen/models"
 	"github.com/nicolas2bert/ba-server/gen/restapi/operations/intern"
-	"github.com/nicolas2bert/ba-server/gen/restapi/operations/ui"
 )
 
 var usersInMemory = map[string]*models.User{}
 
-func GetUserID(id string) (*models.User, middleware.Responder) {
-	if usersInMemory[id] == nil {
-		return nil, ui.NewGetPhotosNotFound()
+func GetUserID(ctx context.Context, id string) (*models.User, middleware.Responder) {
+	user, err := db.GetUser(ctx, id)
+	if err != nil {
+		return nil, intern.NewGetUsersIDInternalServerError()
 	}
-	return usersInMemory[id], nil
+	return user, nil
 }
 
 func GetUsersIDHandler(params intern.GetUsersIDParams, principal *auth.PrincipalBA) middleware.Responder {
 	ctx := params.HTTPRequest.Context()
 	l := apiContext.GetLog(ctx, "GetUsersIDHandler")
-	user, err := GetUserID(params.ID)
+	user, err := GetUserID(ctx, params.ID)
 	if err != nil {
+		l.Info("fail to get user from user.ID")
 		return err
 	}
 	l.Info("ok")
@@ -33,7 +37,11 @@ func SaveUserHandler(params intern.SaveUserParams, principal *auth.PrincipalBA) 
 	ctx := params.HTTPRequest.Context()
 	l := apiContext.GetLog(ctx, "SaveUserHandler")
 
-	usersInMemory[*params.User.ID] = params.User
+	err := db.CreateUser(ctx, params.User)
+	if err != nil {
+		l.WithError(err).Info("fail to create user")
+		return intern.NewSaveUserInternalServerError()
+	}
 
 	l.Info("ok")
 	return intern.NewSaveUserOK()
