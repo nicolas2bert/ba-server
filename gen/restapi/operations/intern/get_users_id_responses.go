@@ -56,3 +56,95 @@ func (o *GetUsersIDOK) WriteResponse(rw http.ResponseWriter, producer runtime.Pr
 		}
 	}
 }
+
+// GetUsersIDBadRequestCode is the HTTP code returned for type GetUsersIDBadRequest
+const GetUsersIDBadRequestCode int = 400
+
+/*GetUsersIDBadRequest Bad request
+
+swagger:response getUsersIdBadRequest
+*/
+type GetUsersIDBadRequest struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *GetUsersIDBadRequestBody `json:"body,omitempty"`
+}
+
+// NewGetUsersIDBadRequest creates GetUsersIDBadRequest with default headers values
+func NewGetUsersIDBadRequest() *GetUsersIDBadRequest {
+
+	return &GetUsersIDBadRequest{}
+}
+
+// WithPayload adds the payload to the get users Id bad request response
+func (o *GetUsersIDBadRequest) WithPayload(payload *GetUsersIDBadRequestBody) *GetUsersIDBadRequest {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the get users Id bad request response
+func (o *GetUsersIDBadRequest) SetPayload(payload *GetUsersIDBadRequestBody) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *GetUsersIDBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(400)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// GetUsersIDNotFoundCode is the HTTP code returned for type GetUsersIDNotFound
+const GetUsersIDNotFoundCode int = 404
+
+/*GetUsersIDNotFound Not Found
+
+swagger:response getUsersIdNotFound
+*/
+type GetUsersIDNotFound struct {
+}
+
+// NewGetUsersIDNotFound creates GetUsersIDNotFound with default headers values
+func NewGetUsersIDNotFound() *GetUsersIDNotFound {
+
+	return &GetUsersIDNotFound{}
+}
+
+// WriteResponse to the client
+func (o *GetUsersIDNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
+
+	rw.WriteHeader(404)
+}
+
+// GetUsersIDInternalServerErrorCode is the HTTP code returned for type GetUsersIDInternalServerError
+const GetUsersIDInternalServerErrorCode int = 500
+
+/*GetUsersIDInternalServerError Server Error
+
+swagger:response getUsersIdInternalServerError
+*/
+type GetUsersIDInternalServerError struct {
+}
+
+// NewGetUsersIDInternalServerError creates GetUsersIDInternalServerError with default headers values
+func NewGetUsersIDInternalServerError() *GetUsersIDInternalServerError {
+
+	return &GetUsersIDInternalServerError{}
+}
+
+// WriteResponse to the client
+func (o *GetUsersIDInternalServerError) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
+
+	rw.WriteHeader(500)
+}

@@ -34,3 +34,95 @@ func (o *SaveUserOK) WriteResponse(rw http.ResponseWriter, producer runtime.Prod
 
 	rw.WriteHeader(200)
 }
+
+// SaveUserBadRequestCode is the HTTP code returned for type SaveUserBadRequest
+const SaveUserBadRequestCode int = 400
+
+/*SaveUserBadRequest Bad request
+
+swagger:response saveUserBadRequest
+*/
+type SaveUserBadRequest struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *SaveUserBadRequestBody `json:"body,omitempty"`
+}
+
+// NewSaveUserBadRequest creates SaveUserBadRequest with default headers values
+func NewSaveUserBadRequest() *SaveUserBadRequest {
+
+	return &SaveUserBadRequest{}
+}
+
+// WithPayload adds the payload to the save user bad request response
+func (o *SaveUserBadRequest) WithPayload(payload *SaveUserBadRequestBody) *SaveUserBadRequest {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the save user bad request response
+func (o *SaveUserBadRequest) SetPayload(payload *SaveUserBadRequestBody) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *SaveUserBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(400)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// SaveUserNotFoundCode is the HTTP code returned for type SaveUserNotFound
+const SaveUserNotFoundCode int = 404
+
+/*SaveUserNotFound Not Found
+
+swagger:response saveUserNotFound
+*/
+type SaveUserNotFound struct {
+}
+
+// NewSaveUserNotFound creates SaveUserNotFound with default headers values
+func NewSaveUserNotFound() *SaveUserNotFound {
+
+	return &SaveUserNotFound{}
+}
+
+// WriteResponse to the client
+func (o *SaveUserNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
+
+	rw.WriteHeader(404)
+}
+
+// SaveUserInternalServerErrorCode is the HTTP code returned for type SaveUserInternalServerError
+const SaveUserInternalServerErrorCode int = 500
+
+/*SaveUserInternalServerError Server Error
+
+swagger:response saveUserInternalServerError
+*/
+type SaveUserInternalServerError struct {
+}
+
+// NewSaveUserInternalServerError creates SaveUserInternalServerError with default headers values
+func NewSaveUserInternalServerError() *SaveUserInternalServerError {
+
+	return &SaveUserInternalServerError{}
+}
+
+// WriteResponse to the client
+func (o *SaveUserInternalServerError) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
+
+	rw.WriteHeader(500)
+}
